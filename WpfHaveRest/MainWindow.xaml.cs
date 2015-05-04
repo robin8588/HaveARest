@@ -43,13 +43,13 @@ namespace WpfHaveRest
 
         private void TCountDown(object state)
         {
-            countDownTime -= new TimeSpan(0,0,1);
-            Dispatcher.Invoke(()=>lbcountDownShow.Content = countDownTime.TotalSeconds);
+            countDownTime -= new TimeSpan(0, 0, 1);
+            Dispatcher.Invoke(() => lbcountDownShow.Content = countDownTime.TotalSeconds);
             if (countDownTime == new TimeSpan(0))
             {
                 Dispatcher.Invoke(initRTime);
                 timer = new Timer(RCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.Show();   });
+                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.Show(); });
             }
             else
             {
@@ -60,7 +60,7 @@ namespace WpfHaveRest
         private void RCountDown(object state)
         {
             restTime -= new TimeSpan(0, 0, 1);
-            Dispatcher.Invoke(()=>lbcountDownShow.Content = restTime.TotalSeconds);
+            Dispatcher.Invoke(() => lbcountDownShow.Content = restTime.TotalSeconds);
             if (restTime == new TimeSpan(0))
             {
                 Dispatcher.Invoke(initTTime);
@@ -87,9 +87,9 @@ namespace WpfHaveRest
             lbcountDownShow.Content = restTime.TotalSeconds;
         }
 
-       
 
-       
+
+
 
     }
 }

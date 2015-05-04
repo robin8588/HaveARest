@@ -40,5 +40,11 @@ namespace WpfHaveRest
             }
             objComWebBrowser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, objComWebBrowser, new object[] { hide });
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            browser.Dispose();
+            base.OnClosed(e);
+        }
     }
 }
