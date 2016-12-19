@@ -1,18 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace WpfHaveRest
@@ -26,6 +14,10 @@ namespace WpfHaveRest
         TimeSpan countDownTime;
         TimeSpan restTime;
         MaskWindow mw;
+        delegate void voidMethod();
+        delegate void setMethod(double time);
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,12 +36,13 @@ namespace WpfHaveRest
         private void TCountDown(object state)
         {
             countDownTime -= new TimeSpan(0, 0, 1);
-            Dispatcher.Invoke(() => lbcountDownShow.Content = countDownTime.TotalSeconds);
+
+            Dispatcher.Invoke(new setMethod(setCountDownTime), countDownTime.TotalSeconds);
             if (countDownTime == new TimeSpan(0))
             {
-                Dispatcher.Invoke(initRTime);
+                Dispatcher.Invoke(new voidMethod(initRTime));
                 timer = new Timer(RCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.Show(); });
+                Dispatcher.Invoke(new voidMethod(showWindow));
             }
             else
             {
@@ -60,12 +53,12 @@ namespace WpfHaveRest
         private void RCountDown(object state)
         {
             restTime -= new TimeSpan(0, 0, 1);
-            Dispatcher.Invoke(() => lbcountDownShow.Content = restTime.TotalSeconds);
+            Dispatcher.Invoke(new setMethod(setCountDownTime), restTime.TotalSeconds);
             if (restTime == new TimeSpan(0))
             {
-                Dispatcher.Invoke(initTTime);
+                Dispatcher.Invoke(new voidMethod(initTTime));
                 timer = new Timer(TCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { if (mw != null) { mw.Close(); } });
+                Dispatcher.Invoke(new voidMethod(closeWindow));
             }
             else
             {
@@ -88,8 +81,19 @@ namespace WpfHaveRest
         }
 
 
+        private void setCountDownTime(double time)
+        {
+            lbcountDownShow.Content = time;
+        }
 
+        private void showWindow()
+        {
+            mw = new MaskWindow(); mw.Show();
+        }
 
-
+        private void closeWindow()
+        {
+            if (mw != null) { mw.Close(); }
+        }
     }
 }
