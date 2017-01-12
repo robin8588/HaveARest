@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using WpfHaveRest.Properties;
 
 namespace WpfHaveRest
 {
@@ -13,8 +14,8 @@ namespace WpfHaveRest
         public MaskWindow()
         {
             InitializeComponent();
-            
-            browser.Navigate(new Uri("http://cn.bing.com", UriKind.RelativeOrAbsolute));
+            var url = Properties.Settings.Default.Url;
+            browser.Navigate(new Uri(url, UriKind.RelativeOrAbsolute));
             browser.Navigated += (a, b) => { HideScriptErrors(browser, true); };
         }
 
