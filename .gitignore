@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/WpfHaveRest/v15
+/WpfHaveRest/bin/Debug
+/WpfHaveRest/obj/Debug
+/WpfHaveRest/WpfHaveRest.csproj.user
