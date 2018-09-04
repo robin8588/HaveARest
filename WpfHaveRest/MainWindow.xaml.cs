@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -29,6 +30,8 @@ namespace WpfHaveRest
         public MainWindow()
         {
             InitializeComponent();
+            countDownSecond.Text = ConfigurationManager.AppSettings["CountDownSecond"];
+            intervalSecond.Text = ConfigurationManager.AppSettings["IntervalSecond"];
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
