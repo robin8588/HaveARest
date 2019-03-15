@@ -41,18 +41,27 @@ namespace WpfHaveRest
             intervalSecond.IsEnabled = false;
             this.WindowState = WindowState.Minimized;
             initTTime();
-            timer = new Timer(TCountDown, null, 1000, Timeout.Infinite);
+            timer = new Timer(WorkCountDown, null, 1000, Timeout.Infinite);
         }
 
-        private void TCountDown(object state)
+        private void WorkCountDown(object state)
         {
             countDownTime -= new TimeSpan(0, 0, 1);
             Dispatcher.Invoke(() => lbcountDownShow.Content = countDownTime.TotalSeconds);
             if (countDownTime == new TimeSpan(0))
             {
                 Dispatcher.Invoke(initRTime);
-                timer = new Timer(RCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.Show(); });
+                timer = new Timer(RestCountDown, null, 0, Timeout.Infinite);
+                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.Show(); this.Topmost = false; this.WindowState = WindowState.Minimized; });
+            }
+            else if (countDownTime == new TimeSpan(0, 0, 10))
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    this.WindowState = WindowState.Normal;
+                    this.Topmost = true;
+                });
+                timer.Change(1000, Timeout.Infinite);
             }
             else
             {
@@ -60,14 +69,14 @@ namespace WpfHaveRest
             }
         }
 
-        private void RCountDown(object state)
+        private void RestCountDown(object state)
         {
             restTime -= new TimeSpan(0, 0, 1);
             Dispatcher.Invoke(() => lbcountDownShow.Content = restTime.TotalSeconds);
             if (restTime == new TimeSpan(0))
             {
                 Dispatcher.Invoke(initTTime);
-                timer = new Timer(TCountDown, null, 0, Timeout.Infinite);
+                timer = new Timer(WorkCountDown, null, 0, Timeout.Infinite);
                 Dispatcher.Invoke(() => { if (mw != null) { mw.Close(); } });
             }
             else
@@ -90,9 +99,11 @@ namespace WpfHaveRest
             lbcountDownShow.Content = restTime.TotalSeconds;
         }
 
-
-
-
-
+        private void Delay_Button_Click(object sender, RoutedEventArgs e)
+        {
+            countDownTime += new TimeSpan(0, 10, 0);
+            this.Topmost = false;
+            this.WindowState = WindowState.Minimized;
+        }
     }
 }
