@@ -1,17 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection; 
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Controls; 
 
 namespace WpfHaveRest
 {
@@ -41,6 +33,20 @@ namespace WpfHaveRest
             objComWebBrowser.GetType().InvokeMember("Silent", BindingFlags.SetProperty, null, objComWebBrowser, new object[] { hide });
         }
 
+        public void ShowALLScreens()
+        {
+            List<System.Windows.Forms.Screen> screens = System.Windows.Forms.Screen.AllScreens.ToList();
+
+            this.WindowStyle = WindowStyle.None;
+            this.WindowStartupLocation = WindowStartupLocation.Manual;
+
+            this.Left = 0;
+            this.Top = 0;
+            this.Width = screens.Max(t => t.WorkingArea.Right);
+            this.Height = screens.Max(t => t.WorkingArea.Bottom);
+            this.WindowState = WindowState.Normal;
+            this.Show();
+        }
         protected override void OnClosed(EventArgs e)
         {
             browser.Dispose();

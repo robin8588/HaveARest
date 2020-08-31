@@ -52,7 +52,7 @@ namespace WpfHaveRest
             {
                 Dispatcher.Invoke(initRTime);
                 timer = new Timer(RestCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.Show(); this.Topmost = false; this.WindowState = WindowState.Minimized; });
+                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.ShowALLScreens(); this.Topmost = false; this.WindowState = WindowState.Minimized; });
             }
             else if (countDownTime == new TimeSpan(0, 1, 0))
             {
