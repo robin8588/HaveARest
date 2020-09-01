@@ -53,9 +53,8 @@ namespace WpfHaveRest
             countDownSecond.IsEnabled = false;
             intervalSecond.IsEnabled = false;
             this.WindowState = WindowState.Minimized;
-            mw = new MaskWindow(); mw.ShowALLScreens(); this.Topmost = false; this.WindowState = WindowState.Minimized;
-            //initTTime();
-            //timer = new Timer(WorkCountDown, null, 1000, Timeout.Infinite);
+            initTTime();
+            timer = new Timer(WorkCountDown, null, 1000, Timeout.Infinite);
         }
 
         private void WorkCountDown(object state)
