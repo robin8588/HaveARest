@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System; 
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Reflection;
+using System.Threading; 
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace WpfHaveRest
@@ -27,11 +18,33 @@ namespace WpfHaveRest
         TimeSpan countDownTime;
         TimeSpan restTime;
         MaskWindow mw;
+        private System.Windows.Forms.NotifyIcon notifyIcon = null;
         public MainWindow()
         {
             InitializeComponent();
             countDownSecond.Text = ConfigurationManager.AppSettings["CountDownSecond"];
             intervalSecond.Text = ConfigurationManager.AppSettings["IntervalSecond"];
+            InitNotify();
+        }
+        private void InitNotify() {
+
+            notifyIcon = new System.Windows.Forms.NotifyIcon();
+            notifyIcon.Text = "";
+            notifyIcon.Visible = true;
+            notifyIcon.Icon = ToIcon("20150422052746327_easyicon_net_128.ico");
+            notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu();
+            notifyIcon.ContextMenu.MenuItems.Add("退出",(o,e)=>Application.Current.Shutdown());  
+            notifyIcon.DoubleClick += (o, e) => { this.Show(); };
+        }
+
+        private System.Drawing.Icon ToIcon(string resName)
+        {
+            Assembly myAssembly;
+            myAssembly = Assembly.GetExecutingAssembly();
+            System.Resources.ResourceManager rm = new
+            System.Resources.ResourceManager(myAssembly.GetName().Name+ ".g‎", myAssembly);
+            var item= rm.GetObject(resName);
+            return new System.Drawing.Icon((System.IO.Stream)item);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -52,7 +65,7 @@ namespace WpfHaveRest
             {
                 Dispatcher.Invoke(initRTime);
                 timer = new Timer(RestCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.Show(); this.Topmost = false; this.WindowState = WindowState.Minimized; });
+                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.ShowALLScreens(); this.Topmost = false; this.WindowState = WindowState.Minimized; });
             }
             else if (countDownTime == new TimeSpan(0, 1, 0))
             {
@@ -104,6 +117,12 @@ namespace WpfHaveRest
             countDownTime += new TimeSpan(0, 10, 0);
             this.Topmost = false;
             this.WindowState = WindowState.Minimized;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        { 
+            this.Hide();
+            e.Cancel = true;
         }
     }
 }

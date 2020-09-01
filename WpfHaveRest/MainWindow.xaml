@@ -1,7 +1,7 @@
 ﻿<Window x:Class="WpfHaveRest.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="休息休息" Height="170" Width="230" Icon="20150422052746327_easyicon_net_128.ico">
+        Title="休息休息" Height="170" Width="230" Icon="20150422052746327_easyicon_net_128.ico" Closing="Window_Closing">
     <Grid Margin="0,0,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="57*"/>
