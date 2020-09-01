@@ -35,15 +35,13 @@ namespace WpfHaveRest
 
         public void ShowALLScreens()
         {
-            List<System.Windows.Forms.Screen> screens = System.Windows.Forms.Screen.AllScreens.ToList();
-
+            List<System.Windows.Forms.Screen> screens = System.Windows.Forms.Screen.AllScreens.ToList(); 
             this.WindowStyle = WindowStyle.None;
-            this.WindowStartupLocation = WindowStartupLocation.Manual;
-
+            this.WindowStartupLocation = WindowStartupLocation.Manual; 
             this.Left = 0;
             this.Top = 0;
-            this.Width = screens.Max(t => t.WorkingArea.Right);
-            this.Height = screens.Max(t => t.WorkingArea.Bottom);
+            this.Width = screens.Sum(t => t.Bounds.Width);
+            this.Height = screens.Max(t => t.Bounds.Height);
             this.WindowState = WindowState.Normal;
             this.Show();
         }
