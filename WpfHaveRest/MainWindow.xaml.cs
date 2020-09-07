@@ -1,8 +1,10 @@
 ﻿using System; 
 using System.Configuration;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading; 
 using System.Windows;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -24,6 +26,7 @@ namespace WpfHaveRest
             InitializeComponent();
             countDownSecond.Text = ConfigurationManager.AppSettings["CountDownSecond"];
             intervalSecond.Text = ConfigurationManager.AppSettings["IntervalSecond"];
+            this.ShowInTaskbar = false; 
             InitNotify();
         }
         private void InitNotify() {
@@ -34,7 +37,7 @@ namespace WpfHaveRest
             notifyIcon.Icon = ToIcon("20150422052746327_easyicon_net_128.ico");
             notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu();
             notifyIcon.ContextMenu.MenuItems.Add("退出",(o,e)=>Application.Current.Shutdown());  
-            notifyIcon.DoubleClick += (o, e) => { this.Show(); };
+            notifyIcon.DoubleClick += (o, e) => { this.Show(); }; 
         }
 
         private System.Drawing.Icon ToIcon(string resName)
@@ -52,9 +55,10 @@ namespace WpfHaveRest
             btn.IsEnabled = false;
             countDownSecond.IsEnabled = false;
             intervalSecond.IsEnabled = false;
-            this.WindowState = WindowState.Minimized;
+            this.Hide(); 
             initTTime();
             timer = new Timer(WorkCountDown, null, 1000, Timeout.Infinite);
+            notifyIcon.ShowBalloonTip(1000, "后台运行", "右点图标进行更多操作", System.Windows.Forms.ToolTipIcon.Info);
         }
 
         private void WorkCountDown(object state)
@@ -70,9 +74,11 @@ namespace WpfHaveRest
             else if (countDownTime == new TimeSpan(0, 1, 0))
             {
                 Dispatcher.Invoke(() =>
-                {
+                { 
                     this.WindowState = WindowState.Normal;
+                    Application curApp = Application.Current; 
                     this.Topmost = true;
+                    this.Show();
                 });
                 timer.Change(1000, Timeout.Infinite);
             }
@@ -124,5 +130,24 @@ namespace WpfHaveRest
             this.Hide();
             e.Cancel = true;
         }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong); 
+
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x8000;
+        private const int WS_MINIMIZE = -131073;
+        private const int WS_MAXIMIZE = -65537;
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+
+            var hwnd = new WindowInteropHelper(this).Handle;
+            var value = GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU & WS_MINIMIZE & WS_MAXIMIZE;
+            SetWindowLong(hwnd, GWL_STYLE, value);
+        } 
     }
 }
