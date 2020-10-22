@@ -37,7 +37,7 @@ namespace WpfHaveRest
             notifyIcon.Icon = ToIcon("20150422052746327_easyicon_net_128.ico");
             notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu();
             notifyIcon.ContextMenu.MenuItems.Add("退出",(o,e)=>Application.Current.Shutdown());  
-            notifyIcon.DoubleClick += (o, e) => { this.Show(); }; 
+            notifyIcon.DoubleClick += (o, e) => { this.Show(); this.WindowState = WindowState.Normal; }; 
         }
 
         private System.Drawing.Icon ToIcon(string resName)
@@ -69,7 +69,7 @@ namespace WpfHaveRest
             {
                 Dispatcher.Invoke(initRTime);
                 timer = new Timer(RestCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.ShowALLScreens(); this.Topmost = false; this.WindowState = WindowState.Minimized; });
+                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.ShowALLScreens(); this.Topmost = false; this.Hide(); });
             }
             else if (countDownTime == new TimeSpan(0, 1, 0))
             {
@@ -122,6 +122,7 @@ namespace WpfHaveRest
         {
             countDownTime += new TimeSpan(0, 10, 0);
             this.Topmost = false;
+            this.Hide();
             this.WindowState = WindowState.Minimized;
         }
 
