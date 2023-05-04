@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Reflection; 
 using System.Windows;
@@ -15,8 +16,8 @@ namespace WpfHaveRest
         public MaskWindow()
         {
             InitializeComponent();
-            
-            browser.Navigate(new Uri("http://cn.bing.com", UriKind.RelativeOrAbsolute));
+            string url = ConfigurationManager.AppSettings["MainPageUrl"];
+            browser.Navigate(new Uri(url, UriKind.RelativeOrAbsolute));
             browser.Navigated += (a, b) => { HideScriptErrors(browser, true); };
         }
 
