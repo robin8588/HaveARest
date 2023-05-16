@@ -1,8 +1,8 @@
-﻿using System; 
+﻿using System;
 using System.Configuration;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Threading; 
+using System.Threading;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media;
@@ -26,18 +26,19 @@ namespace WpfHaveRest
             InitializeComponent();
             countDownSecond.Text = ConfigurationManager.AppSettings["CountDownSecond"];
             intervalSecond.Text = ConfigurationManager.AppSettings["IntervalSecond"];
-            this.ShowInTaskbar = false; 
+            this.ShowInTaskbar = false;
             InitNotify();
         }
-        private void InitNotify() {
+        private void InitNotify()
+        {
 
             notifyIcon = new System.Windows.Forms.NotifyIcon();
             notifyIcon.Text = "";
             notifyIcon.Visible = true;
             notifyIcon.Icon = ToIcon("20150422052746327_easyicon_net_128.ico");
             notifyIcon.ContextMenu = new System.Windows.Forms.ContextMenu();
-            notifyIcon.ContextMenu.MenuItems.Add("退出",(o,e)=>Application.Current.Shutdown());  
-            notifyIcon.DoubleClick += (o, e) => { this.Show(); this.WindowState = WindowState.Normal; }; 
+            notifyIcon.ContextMenu.MenuItems.Add("退出", (o, e) => Application.Current.Shutdown());
+            notifyIcon.DoubleClick += (o, e) => { this.Show(); this.WindowState = WindowState.Normal; };
         }
 
         private System.Drawing.Icon ToIcon(string resName)
@@ -45,8 +46,8 @@ namespace WpfHaveRest
             Assembly myAssembly;
             myAssembly = Assembly.GetExecutingAssembly();
             System.Resources.ResourceManager rm = new
-            System.Resources.ResourceManager(myAssembly.GetName().Name+ ".g‎", myAssembly);
-            var item= rm.GetObject(resName);
+            System.Resources.ResourceManager(myAssembly.GetName().Name + ".g‎", myAssembly);
+            var item = rm.GetObject(resName);
             return new System.Drawing.Icon((System.IO.Stream)item);
         }
 
@@ -55,7 +56,7 @@ namespace WpfHaveRest
             btn.IsEnabled = false;
             countDownSecond.IsEnabled = false;
             intervalSecond.IsEnabled = false;
-            this.Hide(); 
+            this.Hide();
             initTTime();
             timer = new Timer(WorkCountDown, null, 1000, Timeout.Infinite);
             notifyIcon.ShowBalloonTip(1000, "后台运行", "右点图标进行更多操作", System.Windows.Forms.ToolTipIcon.Info);
@@ -69,14 +70,18 @@ namespace WpfHaveRest
             {
                 Dispatcher.Invoke(initRTime);
                 timer = new Timer(RestCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { mw = new MaskWindow(); mw.ShowALLScreens(); this.Topmost = false; this.Hide(); });
+                Dispatcher.Invoke(() =>
+                {
+                    mw = new MaskWindow();
+                    mw.ShowALLScreens();
+                });
             }
             else if (countDownTime == new TimeSpan(0, 1, 0))
             {
                 Dispatcher.Invoke(() =>
-                { 
+                {
                     this.WindowState = WindowState.Normal;
-                    Application curApp = Application.Current; 
+                    Application curApp = Application.Current;
                     this.Topmost = true;
                     this.Show();
                 });
@@ -96,7 +101,11 @@ namespace WpfHaveRest
             {
                 Dispatcher.Invoke(initTTime);
                 timer = new Timer(WorkCountDown, null, 0, Timeout.Infinite);
-                Dispatcher.Invoke(() => { if (mw != null) { mw.Close(); } });
+                Dispatcher.Invoke(() =>
+                {
+                    if (mw != null)
+                    { mw.Close(); this.Hide(); }
+                });
             }
             else
             {
@@ -127,7 +136,7 @@ namespace WpfHaveRest
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        { 
+        {
             this.Hide();
             e.Cancel = true;
         }
@@ -135,7 +144,7 @@ namespace WpfHaveRest
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
         [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong); 
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         private const int GWL_STYLE = -16;
         private const int WS_SYSMENU = 0x8000;
@@ -149,6 +158,6 @@ namespace WpfHaveRest
             var hwnd = new WindowInteropHelper(this).Handle;
             var value = GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU & WS_MINIMIZE & WS_MAXIMIZE;
             SetWindowLong(hwnd, GWL_STYLE, value);
-        } 
+        }
     }
 }
