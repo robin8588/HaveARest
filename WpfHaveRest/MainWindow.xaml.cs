@@ -24,8 +24,14 @@ namespace WpfHaveRest
         public MainWindow()
         {
             InitializeComponent();
+#if DEBUG
+            countDownSecond.Text = "1";
+            intervalSecond.Text = "1";
+#else
             countDownSecond.Text = ConfigurationManager.AppSettings["CountDownSecond"];
             intervalSecond.Text = ConfigurationManager.AppSettings["IntervalSecond"];
+#endif
+            maskUrl.Text = ConfigurationManager.AppSettings["MainPageUrl"];
             this.ShowInTaskbar = false;
             InitNotify();
         }
@@ -73,6 +79,7 @@ namespace WpfHaveRest
                 Dispatcher.Invoke(() =>
                 {
                     mw = new MaskWindow();
+                    mw.LoadingMask(maskUrl.Text, intervalSecond.Text);
                     mw.ShowALLScreens();
                 });
             }
