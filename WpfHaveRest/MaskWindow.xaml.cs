@@ -66,19 +66,14 @@ namespace WpfHaveRest
         public void DisplayTime(string seconds)
         {
             string script = $@"
-            
-            
             let countdownSeconds = {seconds} * 60;
-
-          
             const countdownElement = document.getElementById('sb_form_q');
 
-            
             function updateCountdownDisplay() {{
                 countdownElement.value = countdownSeconds + ' 秒';
+                countdownElement.blur();
             }}
 
-            
             function countdown() {{
                 if (countdownSeconds > 0) {{
                     countdownSeconds--;
@@ -88,12 +83,9 @@ namespace WpfHaveRest
                 }}
             }}
 
-            
             updateCountdownDisplay();
 
-            
             const countdownInterval = setInterval(countdown, 1000);
-            
             ";
             browser.InvokeScript("eval", script);
         }
